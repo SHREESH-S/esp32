@@ -1,0 +1,830 @@
+# PROJECT: ESP32 Wi-Fi ACCESS POINT — INTERACTIVE SIMULATION LAB
+
+## 1. YOUR ROLE
+
+Act as a senior embedded systems engineer, ESP32 firmware developer, Wi-Fi networking engineer, simulation software architect, and expert frontend developer.
+
+Build a complete, functional, interactive educational simulation website that demonstrates exactly how an ESP32 microcontroller operates in Wi-Fi Access Point (AP) mode.
+
+This is not a static website, a presentation, a documentation page, or a collection of pictures.
+
+It must be a working browser-based virtual laboratory in which users can interact with an ESP32, start and stop its Wi-Fi access point, connect simulated client devices, observe networking events, inspect IP addresses, simulate data transmission, and learn how each operation works internally.
+
+The interface must be extremely minimal, professional, technically accurate, and easy for an electronics engineering student to understand.
+
+Do not ask me questions. Make sensible engineering decisions and build the complete application.
+
+## 2. MAIN OBJECTIVE
+
+Create a virtual laboratory that simulates this complete communication flow:
+
+ESP32 → Creates Wi-Fi Access Point → Broadcasts SSID → Client Scans Networks → Client Connects → Authentication → Association → DHCP IP Assignment → Data Communication → Client Disconnects.
+
+The user must be able to observe the entire process step by step and also run it automatically.
+
+The simulation must explain what the ESP32 does, what the client device does, what happens over Wi-Fi, and what occurs at the IP networking layer.
+
+Important technical distinction:
+The browser simulation must not pretend that it creates a real Wi-Fi access point or transmits real radio packets. All network operations are simulated in software unless a separate, explicitly implemented hardware integration is available.
+
+## 3. TECHNOLOGY STACK
+
+Use a modern, stable web application architecture supported by Google AI Studio.
+
+Preferred stack:
+- React
+- TypeScript
+- Vite, if supported by the generated project environment
+- Tailwind CSS or clean custom CSS
+- Lucide icons
+- SVG for network topology, signal indicators, and packet animations
+
+Use the package manager and project structure provided by the environment.
+
+Avoid unnecessary libraries, complex backend services, databases, authentication, and external APIs.
+
+All core simulation functions must work locally in the browser.
+
+Use a deterministic simulation engine with a clear state model rather than using an AI model to decide networking outcomes.
+
+Gemini may optionally power a separate educational assistant, but the simulation must never depend on Gemini API availability.
+
+Do not hardcode the entire interface into one giant component. Use reusable components and separate the simulation logic from the UI.
+
+## 4. DESIGN SYSTEM — STRICT REQUIREMENTS
+
+Design the website like a premium engineering instrument or professional network-analysis application.
+
+Visual direction:
+- Minimal white or warm-white background.
+- Dark charcoal text.
+- Muted slate-gray secondary text.
+- Thin neutral borders.
+- One restrained blue accent for active network states.
+- Green for successful connections.
+- Amber for warnings.
+- Red for errors.
+- Small, precise status indicators.
+- Subtle transitions only where they communicate state changes.
+
+Typography:
+- Use Inter or a similar clean sans-serif.
+- Use a monospaced font for terminal output, IP addresses, MAC addresses, packet logs, and code.
+- Maintain a clear type hierarchy.
+- Keep labels concise.
+
+Layout:
+- Desktop-first responsive engineering dashboard.
+- Compact top navigation.
+- Left sidebar or compact section navigation.
+- Large central simulation workspace.
+- Right-side inspector or collapsible event panel.
+- Mobile-friendly stacked layout.
+
+Do not use:
+- Excessive gradients.
+- Glassmorphism.
+- Glowing neon effects.
+- Large decorative hero illustrations.
+- Giant rounded cards.
+- Excessive shadows.
+- Emoji as technical icons.
+- Fake charts or meaningless metrics.
+- AI-generated visual assets as a replacement for functional diagrams.
+- Unnecessary animations.
+- Generic SaaS landing-page layouts.
+
+The application should open directly into the simulation workspace, not a marketing homepage.
+
+## 5. APPLICATION NAVIGATION
+
+Create the following sections:
+
+1. Simulation Lab
+2. Network Inspector
+3. Packet Explorer
+4. Serial Monitor
+5. Firmware
+6. Learning Guide
+
+Keep the simulation visible and accessible throughout the experience.
+
+Provide a compact project header showing:
+
+Project: ESP32 Wi-Fi AP Lab
+Mode: SoftAP
+Simulation status: Stopped / Starting / Running / Error
+Connected clients: current number / configured maximum
+Simulation clock: elapsed simulated time
+
+Add a global Reset Simulation action with a confirmation step if the action would discard an active simulation session.
+
+## 6. SIMULATION WORKSPACE
+
+Create a central interactive network topology diagram.
+
+Display these components as actual functional UI elements:
+
+A. ESP32 board
+B. Wi-Fi access point / SSID
+C. Smartphone client
+D. Laptop client
+E. Optional third client
+F. DHCP address assignment
+G. Packet/data communication paths
+
+The ESP32 should be the central node.
+
+Represent the access point as a wireless network associated with the ESP32, not as a separate physical router.
+
+Show the following information on the ESP32 node:
+
+- Board name: ESP32 DevKit
+- Wi-Fi mode: AP
+- SSID
+- Channel
+- Security mode
+- Access point IP address
+- Maximum configured clients
+- Current connected clients
+- Signal indicator for each simulated client, if enabled
+
+Display a clear distinction between:
+- The ESP32 hardware
+- The SoftAP software function
+- The wireless network
+- Connected client devices
+- DHCP/IP networking
+
+Use SVG lines and animated dots to represent simulated network activity.
+
+Animations must only appear when the corresponding simulated event occurs.
+
+Allow users to select a node and inspect its details.
+
+Provide controls to:
+- Start Access Point
+- Stop Access Point
+- Restart Access Point
+- Add Client
+- Remove Client
+- Connect
+- Disconnect
+- Send Data
+- Reset Simulation
+
+Disable invalid actions. For example, clients cannot connect while the access point is stopped.
+
+## 7. ACCESS POINT CONFIGURATION PANEL
+
+Create a working configuration form with the following fields:
+
+SSID: ESP32_LAB_AP
+Password: esp32lab123
+AP IP address: 192.168.4.1
+Subnet mask: 255.255.255.0
+Wi-Fi channel: 1
+Maximum clients: 4
+Security: WPA2-PSK / Open
+DHCP: Enabled / Disabled
+Beacon interval: 100 ms
+
+Defaults should reflect a typical educational ESP32 SoftAP configuration.
+
+Validate inputs:
+- SSID must be within the supported Wi-Fi SSID length limit.
+- For WPA2-PSK, require a valid password length of 8–63 characters.
+- Open networks must not require a password.
+- The IP address and subnet mask must be valid IPv4 values.
+- The maximum client count must respect the selected simulation profile and hardware configuration.
+- The channel must be valid for the selected Wi-Fi regulatory profile.
+- Prevent changes to configuration values that should not change without restarting the simulated AP, or clearly implement and explain a restart.
+
+When the user changes the configuration, update the actual simulation behavior rather than only changing the displayed text.
+
+Do not expose passwords in the event log.
+
+Provide a Restore Defaults action.
+
+## 8. ACCESS POINT STARTUP SEQUENCE
+
+When Start Access Point is clicked, run a realistic, visible state machine.
+
+Show each stage with timestamps and a short explanation.
+
+Suggested sequence:
+
+Stage 1: Validate configuration.
+Stage 2: Initialize Wi-Fi subsystem.
+Stage 3: Configure Wi-Fi mode as AP.
+Stage 4: Configure the SoftAP network.
+Stage 5: Start the access point.
+Stage 6: Mark the AP as running.
+Stage 7: Begin simulated beacon transmission.
+Stage 8: Start DHCP service if enabled.
+
+Show the state transitions in the event timeline.
+
+Example simulated serial output:
+
+[0000 ms] Starting ESP32 Wi-Fi AP simulation
+[0010 ms] Configuration validated
+[0020 ms] Wi-Fi mode configured: WIFI_AP
+[0030 ms] SoftAP SSID: ESP32_LAB_AP
+[0040 ms] SoftAP IP: 192.168.4.1
+[0050 ms] DHCP server: enabled
+[0060 ms] Access point started successfully
+
+These timestamps are illustrative simulation timestamps, not actual ESP32 boot measurements.
+
+The startup process must be cancellable through Stop Access Point.
+
+When the AP is running, show a subtle live status indicator.
+
+Stopping the AP must:
+- Stop simulated beacon events.
+- Prevent new client connections.
+- Disconnect existing clients.
+- Clear or release DHCP leases as appropriate.
+- Stop active packet transfers.
+- Update all network panels and event logs consistently.
+
+## 9. CLIENT DEVICE SIMULATION
+
+Allow the user to create client devices with editable names and device types.
+
+Supported device types:
+- Smartphone
+- Laptop
+- Tablet
+- Generic Wi-Fi device
+
+Each client must have an independent state machine:
+
+OFFLINE
+SCANNING
+NETWORK_FOUND
+AUTHENTICATING
+ASSOCIATING
+REQUESTING_IP
+CONNECTED
+DISCONNECTING
+DISCONNECTED
+FAILED
+
+Provide a Connect button.
+
+On connection:
+
+1. Verify that the AP is running.
+2. Simulate a network scan.
+3. Discover the configured SSID.
+4. Check security compatibility.
+5. Validate the password if the network is secured.
+6. Check the maximum client limit.
+7. Simulate authentication and association.
+8. If DHCP is enabled, simulate DHCP address assignment.
+9. Mark the client as connected only after the required steps succeed.
+
+Use short, adjustable delays so the experience feels interactive rather than slow.
+
+Allow the user to pause, resume, or fast-forward the simulation.
+
+Display each step as it occurs.
+
+If the password is incorrect, show an authentication failure.
+
+If the maximum client count is reached, reject new clients with a clear explanation.
+
+If the AP is stopped during connection, cancel the process safely.
+
+Prevent duplicate connections and duplicate IP assignments.
+
+Allow clients to disconnect independently.
+
+## 10. DHCP AND IP ADDRESS ASSIGNMENT
+
+Implement a small, deterministic DHCP simulation.
+
+Use 192.168.4.1 as the default AP address.
+
+Use a configurable subnet and address pool appropriate to the selected subnet.
+
+For the default profile, assign client addresses such as:
+- First client: 192.168.4.2
+- Second client: 192.168.4.3
+- Third client: 192.168.4.4
+
+Exclude the AP address and any reserved addresses from the dynamic pool.
+
+Do not assign the same active address to two clients.
+
+Implement the DHCP message sequence:
+
+DISCOVER
+OFFER
+REQUEST
+ACK
+
+Explain each message in simple language.
+
+Show a packet timeline with:
+- Timestamp
+- Source
+- Destination
+- DHCP message type
+- Assigned IP, when applicable
+- Short explanation
+
+On successful DHCP completion, show:
+- Client IP address
+- AP/gateway address
+- Subnet mask
+- DHCP status
+- Lease duration
+- Lease expiration state, if lease timing is implemented
+
+If DHCP is disabled, do not automatically assign a client IP address.
+
+Instead, mark the client as associated but without an automatically assigned IPv4 address.
+
+Provide an optional manual-IP configuration mode with validation and subnet checks.
+
+Explain that association with the Wi-Fi network and obtaining an IP address are separate steps.
+
+## 11. NETWORK INSPECTOR
+
+Build a functional network inspector.
+
+Display:
+- AP status
+- SSID
+- BSSID / simulated AP MAC address
+- Channel
+- Security mode
+- AP IP address
+- Subnet mask
+- DHCP status
+- Connected client list
+- Each client's simulated MAC address
+- Client IP address
+- Connection duration
+- Connection state
+- Received and transmitted simulated bytes
+- Last network event
+
+Use locally generated, clearly labelled simulated MAC addresses.
+
+Do not claim that generated MAC addresses belong to real hardware.
+
+Clicking a client opens its detailed inspector.
+
+Provide filters:
+- All devices
+- Connected
+- Connecting
+- Disconnected
+- Failed
+
+Provide a refresh action that refreshes the displayed state without inventing new events.
+
+## 12. PACKET EXPLORER
+
+Create an interactive packet inspector.
+
+Support simulated events for:
+- Wi-Fi beacon
+- Probe request
+- Probe response
+- Authentication
+- Association request
+- Association response
+- DHCP Discover
+- DHCP Offer
+- DHCP Request
+- DHCP ACK
+- ARP request
+- ARP reply
+- ICMP echo request
+- ICMP echo reply
+- TCP connection setup, if TCP is implemented
+- Application data
+- Disassociation
+- Deauthentication
+
+For each event, display:
+- Timestamp
+- Protocol or frame category
+- Source node
+- Destination node
+- Message type
+- Size in bytes
+- Summary
+- Explanation of what the event means
+
+Make clear which events are 802.11 management frames, which are DHCP/IP messages, and which are application-level data.
+
+Do not incorrectly represent DHCP packets as Wi-Fi management frames.
+
+Allow filtering by protocol, client, and event type.
+
+Clicking an event should open a detailed inspection drawer.
+
+Show a simplified structured packet view. Do not pretend to provide a complete binary packet capture unless actual byte-level packet data has been implemented.
+
+Provide an educational explanation of the difference between:
+- Wi-Fi frames
+- Ethernet-style link-layer concepts
+- IP packets
+- UDP/TCP segments
+- Application messages
+
+## 13. DATA COMMUNICATION SIMULATOR
+
+After a client is connected and has a usable IP address, let the user simulate communication.
+
+Provide these actions:
+
+A. Ping AP
+B. Send text message to ESP32
+C. Echo message back from ESP32
+D. Send a configurable number of bytes
+E. View transfer history
+
+Use a simple local application-level protocol for simulated requests and responses.
+
+For example:
+
+Client sends: HELLO ESP32
+ESP32 responds: HELLO CLIENT
+
+Show the message moving through the topology.
+
+Display:
+- Sender
+- Receiver
+- Message content
+- Simulated byte count
+- Start and end timestamps
+- Success or failure
+- Round-trip time, if implemented
+- Cumulative simulated bytes sent and received
+
+Make it explicit that all transmission times and traffic are simulated.
+
+When the client is disconnected, the AP is stopped, or the target address is unreachable, show the correct failure state.
+
+Do not fabricate successful transfers when the simulation state does not permit them.
+
+## 14. LIVE EVENT LOG AND SERIAL MONITOR
+
+Build two separate views.
+
+A. Network Event Log
+
+Show chronological events for:
+- AP startup and shutdown
+- Beacon events
+- Client scanning
+- Authentication and association
+- DHCP
+- Data transmission
+- Ping requests and responses
+- Client disconnection
+- Errors
+
+B. ESP32 Serial Monitor
+
+Display simulated firmware log output in a terminal-style panel.
+
+Example:
+
+ESP32 Wi-Fi AP Simulation
+WiFi.mode(WIFI_AP)
+WiFi.softAP("ESP32_LAB_AP")
+AP started
+AP IP address: 192.168.4.1
+Client connected
+DHCP lease assigned
+Application message received
+
+Label all output as simulated unless generated by actual connected hardware.
+
+Include:
+- Clear log
+- Pause log updates
+- Auto-scroll
+- Export log as a text file
+- Copy selected log entries
+- Search and filter
+
+Use deterministic timestamps relative to the simulation clock.
+
+## 15. FIRMWARE VIEW
+
+Include a readable Arduino framework C++ firmware example for an ESP32.
+
+Use a code editor or syntax-highlighted code panel.
+
+The default example should contain a working basic SoftAP configuration:
+
+#include <WiFi.h>
+
+const char* ssid = "ESP32_LAB_AP";
+const char* password = "esp32lab123";
+
+void setup() {
+  Serial.begin(115200);
+
+  WiFi.mode(WIFI_AP);
+
+  bool started = WiFi.softAP(ssid, password);
+
+  if (started) {
+    Serial.println("Access Point started");
+    Serial.print("AP IP: ");
+    Serial.println(WiFi.softAPIP());
+  } else {
+    Serial.println("Access Point failed");
+  }
+}
+
+void loop() {
+  delay(1000);
+}
+
+Add educational annotations explaining:
+- WiFi.h
+- WiFi.mode(WIFI_AP)
+- WiFi.softAP()
+- WiFi.softAPIP()
+- Serial.begin()
+- setup()
+- loop()
+
+Show a realistic extension that prints the number of connected stations using the ESP32 Arduino Wi-Fi API.
+
+Where supported by the selected Arduino-ESP32 core, explain the use of WiFi.softAPConfig() for a custom AP IP, gateway, and subnet mask, and the relevant softAP maximum-client configuration.
+
+Provide:
+- Copy code
+- Restore example
+- Download firmware as .ino
+- Syntax-highlighted code
+- A short explanation of how to upload it using Arduino IDE
+
+Do not claim the code is running on the physical ESP32. The firmware view is a reference example unless hardware integration is explicitly implemented.
+
+## 16. LEARNING GUIDE
+
+Include a built-in learning guide divided into beginner-friendly modules.
+
+Module 1: What is an ESP32?
+Module 2: What is a Wi-Fi Access Point?
+Module 3: What is SoftAP mode?
+Module 4: Access Point versus Station mode
+Module 5: How an SSID is broadcast
+Module 6: Wi-Fi scanning and discovery
+Module 7: Authentication and association
+Module 8: DHCP and IP address assignment
+Module 9: Subnet masks and gateway addresses
+Module 10: Client-to-ESP32 communication
+Module 11: Wi-Fi frames versus IP packets
+Module 12: Common connection errors
+Module 13: Arduino firmware walkthrough
+Module 14: Practical experiments and observations
+
+Every module must include:
+- Simple explanation
+- Technical explanation
+- A small diagram or reference to the live simulation
+- A real-world analogy
+- One practical experiment
+- Three short questions with answers
+- A clear connection to the relevant simulator controls
+
+Keep the English simple enough for a beginner engineering student while preserving technical accuracy.
+
+## 17. GUIDED EXPERIMENTS
+
+Provide a practical experiment mode with numbered instructions.
+
+Experiment 1: Start a basic access point.
+Experiment 2: Connect one smartphone client.
+Experiment 3: Connect multiple clients.
+Experiment 4: Observe DHCP address assignment.
+Experiment 5: Enter the wrong Wi-Fi password.
+Experiment 6: Exceed the client limit.
+Experiment 7: Disable DHCP.
+Experiment 8: Configure a custom AP IP address.
+Experiment 9: Send a message from a connected client.
+Experiment 10: Stop the AP during a data transfer.
+Experiment 11: Compare Open and WPA2-secured networks.
+Experiment 12: Disconnect a client and inspect the event log.
+
+For each experiment, include:
+- Objective
+- Starting conditions
+- Step-by-step actions
+- Expected result
+- Observed event log
+- Explanation
+- A reset or repeat option
+
+Add an optional challenge mode in which the user predicts what will happen before running an experiment.
+
+## 18. ERROR AND EDGE-CASE SIMULATION
+
+Implement realistic failure scenarios:
+- Wrong password
+- AP not running
+- Client limit reached
+- DHCP disabled
+- DHCP pool exhausted
+- Invalid IP address
+- Duplicate manual IP
+- Client disconnects during transfer
+- AP stopped during connection
+- Configuration requires restart
+- Invalid network configuration
+- Connection attempt to an unknown SSID
+
+Every error must produce a consistent state change, an event log entry, and a short explanation with a suggested correction.
+
+Never display an error without explaining its cause.
+
+## 19. SIMULATION ENGINE ARCHITECTURE
+
+Separate the simulation engine from the React components.
+
+Create typed entities for:
+
+AccessPoint
+ClientDevice
+NetworkConfiguration
+DhcpLease
+SimulationEvent
+PacketEvent
+TransferSession
+SimulationSettings
+
+Implement an explicit finite state machine for the AP and each client.
+
+Create deterministic functions for:
+- startAccessPoint()
+- stopAccessPoint()
+- restartAccessPoint()
+- addClient()
+- removeClient()
+- connectClient()
+- disconnectClient()
+- allocateDhcpLease()
+- releaseDhcpLease()
+- sendPing()
+- sendMessage()
+- stopTransfer()
+- resetSimulation()
+
+Use one central state store or reducer so all interface panels display the same simulation state.
+
+Important implementation requirements:
+- Avoid duplicate timers.
+- Clean up timers when stopping or resetting.
+- Prevent race conditions during simultaneous connection attempts.
+- Prevent duplicate DHCP leases.
+- Prevent invalid client state transitions.
+- Avoid stale React state in asynchronous callbacks.
+- Keep packet and log timestamps consistent.
+- Use unique event IDs.
+- Keep event ordering deterministic.
+- Validate user inputs before modifying state.
+- Use reproducible default demo data.
+- Do not rely on arbitrary random failures.
+
+If realistic elapsed-time behavior is implemented, use a controllable simulation clock. Pausing or fast-forwarding the clock must behave consistently across the application.
+
+The core network model must be testable independently of the UI.
+
+## 20. EDUCATIONAL MODE AND TECHNICAL ACCURACY
+
+Use two explanation levels:
+
+Beginner Mode:
+Explain what is happening in plain English.
+
+Engineering Mode:
+Explain the underlying network state, relevant protocols, message direction, IP behavior, and firmware relationship.
+
+For example:
+
+Beginner explanation:
+"The ESP32 is creating a wireless network. Your simulated phone is searching for that network."
+
+Engineering explanation:
+"The SoftAP advertises its presence through beacon frames. A client can discover the SSID and proceed through the relevant authentication and association exchanges."
+
+Clarify these important facts:
+- An access point is not automatically an internet connection.
+- A standalone ESP32 SoftAP does not automatically provide internet access.
+- A connected Wi-Fi client does not necessarily have a usable IP address.
+- DHCP address assignment is distinct from Wi-Fi association.
+- DHCP messages typically use UDP and are carried inside IP packets.
+- Wi-Fi management frames and application data are different frame categories.
+- WPA2 authentication behavior is more complex than a password string comparison; the password check in this educational simulator is an abstraction.
+- Browser-based simulation does not generate real 802.11 radio frames.
+- Simulated packet timing is not a real-world performance measurement.
+
+Use technically accurate language without overwhelming beginners.
+
+## 21. PERFORMANCE, ACCESSIBILITY, AND RESPONSIVENESS
+
+The website must:
+- Work on desktop and mobile browsers.
+- Use keyboard-accessible buttons and forms.
+- Include visible focus states.
+- Use accessible labels.
+- Respect reduced-motion preferences.
+- Keep animations lightweight.
+- Avoid unnecessary polling.
+- Show helpful empty states.
+- Provide clear feedback for actions.
+- Avoid clipping terminal output or code.
+- Remain usable with several simulated clients and hundreds of event records.
+- Support clearing or limiting old event records.
+
+Do not add a login screen.
+
+Do not require an external database.
+
+Do not require a paid API.
+
+## 22. TESTING REQUIREMENTS
+
+Create tests for the simulation engine.
+
+At minimum, test:
+
+1. The AP starts successfully with valid configuration.
+2. The AP rejects invalid configuration.
+3. A client cannot connect when the AP is stopped.
+4. A client connects with a correct password.
+5. A client fails authentication with a wrong password.
+6. A connected client receives a unique IP address when DHCP is enabled.
+7. No IP address is automatically assigned when DHCP is disabled.
+8. The maximum client limit is enforced.
+9. Disconnecting a client releases its lease appropriately.
+10. Stopping the AP disconnects clients.
+11. An invalid manual IP is rejected.
+12. A disconnected client cannot send successful application messages.
+13. An active transfer fails if the AP is stopped.
+14. Resetting the simulation restores the expected initial state.
+
+Do not mark tests as passing without implementing them.
+
+## 23. DEFINITION OF DONE
+
+The project is complete only when:
+
+- The application launches without errors.
+- The default screen is the working simulation lab.
+- The ESP32 AP can be started and stopped.
+- Client devices can be added, connected, and disconnected.
+- Authentication failures work.
+- DHCP assignments work.
+- The network inspector reflects real simulator state.
+- Packet events are generated by actual simulation actions.
+- Messages can be sent between connected simulated clients and the ESP32 application endpoint.
+- The serial monitor reflects the simulation.
+- Firmware examples can be copied and downloaded.
+- Guided experiments work.
+- Invalid operations are handled safely.
+- The UI is minimal, responsive, and visually consistent.
+- All controls perform real actions.
+- No fake success states or decorative nonfunctional buttons remain.
+
+## 24. BUILD INSTRUCTIONS
+
+Start by inspecting the available project environment.
+
+Then implement the complete application in the actual project files.
+
+Do not stop after creating a design mockup or a basic dashboard.
+
+Do not only explain how I could build it.
+
+Create the components, state management, simulation engine, validation, event generation, packet explorer, firmware view, learning modules, and experiments.
+
+Run the available development checks and tests. Fix compile errors, broken imports, state synchronization problems, and nonfunctional controls.
+
+If the environment cannot run a command, clearly identify that limitation and provide the exact command needed to run it locally.
+
+At completion, provide:
+1. A concise summary of the implemented features.
+2. The project file structure.
+3. Instructions for launching the website.
+4. Instructions for testing the main scenarios.
+5. Any limitations between the browser simulation and a physical ESP32.
+
+Prioritize a genuinely working simulation, engineering accuracy, and a minimal visual design over decorative features.
+
+BEGIN IMPLEMENTATION NOW.
